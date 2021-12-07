@@ -11,7 +11,14 @@ let parser: Parser;
 })();
 const tokenTypes = new Map<string, number>();
 const tokenModifiers = new Map<string, number>();
-
+const treeSitterAstType = [
+  "attribute_name",
+  "start_tag",
+  "end_tag",
+  "directive_attribute",
+  "directive_name",
+  "directive_argument",
+];
 const legend = (function () {
   const tokenTypesLegend = [
     "comment",
@@ -36,10 +43,7 @@ const legend = (function () {
     "property",
     "label",
     // vue ast node type
-    "attribute_name",
-    "start_tag",
-    "end_tag",
-    "directive_attribute",
+    ...treeSitterAstType
   ];
   tokenTypesLegend.forEach((tokenType, index) => tokenTypes.set(tokenType, index));
 
@@ -123,7 +127,7 @@ class DocumentSemanticTokensProvider implements vscode.DocumentSemanticTokensPro
     traverse(
       tree.rootNode,
       node => {
-        if (["attribute_name", "start_tag", "end_tag", "directive_attribute"].includes(node.type)) {
+        if (treeSitterAstType.includes(node.type)) {
           r.push({
             line: node.startPosition.row,
             startCharacter: node.startPosition.column,
@@ -135,31 +139,6 @@ class DocumentSemanticTokensProvider implements vscode.DocumentSemanticTokensPro
       },
       () => {}
     );
-    console.log(r);
-    // const lines = text.split(/\r\n|\r|\n/);
-    // for (let i = 0; i < lines.length; i++) {
-    // 	const line = lines[i];
-    // 	let currentOffset = 0;
-    // 	do {
-    // 		const openOffset = line.indexOf('[', currentOffset);
-    // 		if (openOffset === -1) {
-    // 			break;
-    // 		}
-    // 		const closeOffset = line.indexOf(']', openOffset);
-    // 		if (closeOffset === -1) {
-    // 			break;
-    // 		}
-    // 		const tokenData = this._parseTextToken(line.substring(openOffset + 1, closeOffset));
-    // 		r.push({
-    // 			line: i,
-    // 			startCharacter: openOffset + 1,
-    // 			length: closeOffset - openOffset - 1,
-    // 			tokenType: tokenData.tokenType,
-    // 			tokenModifiers: tokenData.tokenModifiers
-    // 		});
-    // 		currentOffset = closeOffset;
-    // 	} while (true);
-    // }
 
     return r;
   }
