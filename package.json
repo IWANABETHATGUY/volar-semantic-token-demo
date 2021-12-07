@@ -41,8 +41,11 @@
 					"end_tag": [
 						"entity.name.tag.html"
 					],
-					"directive_attribute": [
-						"meta.directive.vue"
+					"directive_name": [
+						"entity.other.attribute-name.html.vue"
+					],
+					"directive_argument": [
+						"entity.other.attribute-name.html.vue"
 					]
 				}
 			}
